@@ -61,7 +61,7 @@
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
         <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://arnavk.com/"/>
-        <meta itemprop="dateModified" content="2016-02-10T00:00:00&#43;00:00">
+        <meta itemprop="dateModified" content="2016-02-20T00:00:00&#43;00:00">
         <meta itemprop="headline" content="Python in the real world: Context Managers">
         <meta itemprop="description" content="Context Managers are a language feature unique to Python. They are usually used for allocation and releasing of resources, but that is not their only use-case. They are useful for factoring out common setup and teardown code, or any pair of operations that need to be performed before or after a procedure.
 
@@ -86,7 +86,7 @@ In this article, we will review some interesting real-world examples of their us
         </div>
 
         <header class="article-header">
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2016-02-10T00:00:00&#43;00:00">Wed, Feb 10, 2016</time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2016-02-20T00:00:00&#43;00:00">Sat, Feb 20, 2016</time>
           <h1 class="article-title">Python in the real world: Context Managers</h1>
         </header>
 
@@ -132,27 +132,48 @@ with ContextManager() as obj:
 
 <p>The object returned must follow the <strong>Context Manager protocol</strong> which specifies two special methods, <code>__enter__</code> and <code>__exit__</code>.</p>
 
-<p>The return value of the <code>cm.__enter__()</code> is assigned to the target specified in the <code>as</code> phrase. This is optional. But <code>__exit__</code> is still called on the original Context Manager object, not the object returned by <code>__enter__</code>.</p>
+<p>Some important points to remember are:</p>
 
-<pre><code class="language-python">&gt;&gt;&gt; class ContextManager(object):
-...     def __init__(self):
-...             print '__init__ called'
-...     def __enter__(self):
-...             print '__enter__ called'
-...             return self
-...     def __exit__(self, exc_type, exc_value, tb):
-...             print '__exit__ called'
-... 
-&gt;&gt;&gt; with ContextManager() as obj:
-...     print 'do work'
-... 
-__init__ called
-__enter__ called
-do work
-__exit__ called
+<ul>
+<li><code>__enter__</code> should return an object that is assigned to the variable after <code>as</code>. By default it is <code>None</code>, and is optional. A common pattern is to return <code>self</code> and keep the functionality required within the same class.</li>
+<li><code>__exit__</code> is called on the original Context Manager object, not the object returned by <code>__enter__</code>.</li>
+<li>If an error is raised in <code>__init__</code> or <code>__enter__</code> then the code block is never executed and <code>__exit__</code> is not called.</li>
+<li>Once the code block is entered, <code>__exit__</code> is always called, even if an exception is raised in the code block.</li>
+<li>If <code>__exit__</code> returns <code>True</code>, the exception is suppressed.</li>
+</ul>
+
+<pre><code class="language-python">class CManager(object):
+    def __init__(self):
+        print '__init__'
+    
+    def __enter__(self):
+        print '__enter__'
+        return self
+    
+    def __exit__(self, type, value, traceback):
+        print '__exit__:', type, value
+        return True  # Suppress this exception
+
+    def __del__(self):
+        print '__del__', self
+
+with CManager() as c:
+    print 'doing something with c:', c
+    raise RuntimeError()
+    print 'finished doing something'
+print 'done something'
+
+&quot;&quot;&quot;
+# outputs:
+__init__
+__enter__
+doing something with c: &lt;__main__.CManager object at 0x103fd8ed0&gt;
+__exit__: &lt;type 'exceptions.RuntimeError'&gt; 
+done something
+&quot;&quot;&quot;
 </code></pre>
 
-<p>Simple context managers can be written as Generators:</p>
+<p>Simple context managers can also be written using Generators and the <code>contextmanager</code> decorator:</p>
 
 <pre><code class="language-python">from contextlib import contextmanager
 
@@ -217,7 +238,7 @@ with closing(urllib.urlopen('http://google.com')) as page:
     int('hello')
 </code></pre>
 
-<h2 id="seting-up-mocks-before-testing:7d4be8d77d94a7369e578988c199adc2">Seting up mocks before testing</h2>
+<h2 id="setting-up-mocks-before-testing:7d4be8d77d94a7369e578988c199adc2">Setting up mocks before testing</h2>
 
 <pre><code class="language-python">with mock.patch('a.b'):
     call()
@@ -437,7 +458,7 @@ with Pool(processes=4) as pool:  # start 4 worker processes
 <li><a href="#reliable-destructors:7d4be8d77d94a7369e578988c199adc2">Reliable destructors</a></li>
 <li><a href="#making-sure-an-open-stream-is-closed-at-the-end:7d4be8d77d94a7369e578988c199adc2">Making sure an open stream is closed at the end</a></li>
 <li><a href="#making-sure-an-exception-is-raised-in-testing:7d4be8d77d94a7369e578988c199adc2">Making sure an exception is raised in testing</a></li>
-<li><a href="#seting-up-mocks-before-testing:7d4be8d77d94a7369e578988c199adc2">Seting up mocks before testing</a></li>
+<li><a href="#setting-up-mocks-before-testing:7d4be8d77d94a7369e578988c199adc2">Setting up mocks before testing</a></li>
 <li><a href="#synchronising-access-to-shared-resources:7d4be8d77d94a7369e578988c199adc2">Synchronising access to shared resources</a></li>
 <li><a href="#setting-up-the-python-execution-environment:7d4be8d77d94a7369e578988c199adc2">Setting up the Python execution environment</a></li>
 <li><a href="#managing-database-connections-and-transactions:7d4be8d77d94a7369e578988c199adc2">Managing database connections and transactions</a></li>

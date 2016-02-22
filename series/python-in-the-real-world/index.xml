@@ -5,13 +5,13 @@
     <link>http://arnavk.com/series/python-in-the-real-world/</link>
     <description>Recent content in Python In The Real World on Arnav Khare</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 10 Feb 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 20 Feb 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://arnavk.com/series/python-in-the-real-world/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Python in the real world: Context Managers</title>
       <link>http://arnavk.com/posts/python-context-managers/</link>
-      <pubDate>Wed, 10 Feb 2016 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 20 Feb 2016 00:00:00 +0000</pubDate>
       
       <guid>http://arnavk.com/posts/python-context-managers/</guid>
       <description>
@@ -52,27 +52,48 @@ with ContextManager() as obj:
 
 &lt;p&gt;The object returned must follow the &lt;strong&gt;Context Manager protocol&lt;/strong&gt; which specifies two special methods, &lt;code&gt;__enter__&lt;/code&gt; and &lt;code&gt;__exit__&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;The return value of the &lt;code&gt;cm.__enter__()&lt;/code&gt; is assigned to the target specified in the &lt;code&gt;as&lt;/code&gt; phrase. This is optional. But &lt;code&gt;__exit__&lt;/code&gt; is still called on the original Context Manager object, not the object returned by &lt;code&gt;__enter__&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Some important points to remember are:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; class ContextManager(object):
-...     def __init__(self):
-...             print &#39;__init__ called&#39;
-...     def __enter__(self):
-...             print &#39;__enter__ called&#39;
-...             return self
-...     def __exit__(self, exc_type, exc_value, tb):
-...             print &#39;__exit__ called&#39;
-... 
-&amp;gt;&amp;gt;&amp;gt; with ContextManager() as obj:
-...     print &#39;do work&#39;
-... 
-__init__ called
-__enter__ called
-do work
-__exit__ called
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__enter__&lt;/code&gt; should return an object that is assigned to the variable after &lt;code&gt;as&lt;/code&gt;. By default it is &lt;code&gt;None&lt;/code&gt;, and is optional. A common pattern is to return &lt;code&gt;self&lt;/code&gt; and keep the functionality required within the same class.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__exit__&lt;/code&gt; is called on the original Context Manager object, not the object returned by &lt;code&gt;__enter__&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;If an error is raised in &lt;code&gt;__init__&lt;/code&gt; or &lt;code&gt;__enter__&lt;/code&gt; then the code block is never executed and &lt;code&gt;__exit__&lt;/code&gt; is not called.&lt;/li&gt;
+&lt;li&gt;Once the code block is entered, &lt;code&gt;__exit__&lt;/code&gt; is always called, even if an exception is raised in the code block.&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;__exit__&lt;/code&gt; returns &lt;code&gt;True&lt;/code&gt;, the exception is suppressed.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class CManager(object):
+    def __init__(self):
+        print &#39;__init__&#39;
+    
+    def __enter__(self):
+        print &#39;__enter__&#39;
+        return self
+    
+    def __exit__(self, type, value, traceback):
+        print &#39;__exit__:&#39;, type, value
+        return True  # Suppress this exception
+
+    def __del__(self):
+        print &#39;__del__&#39;, self
+
+with CManager() as c:
+    print &#39;doing something with c:&#39;, c
+    raise RuntimeError()
+    print &#39;finished doing something&#39;
+print &#39;done something&#39;
+
+&amp;quot;&amp;quot;&amp;quot;
+# outputs:
+__init__
+__enter__
+doing something with c: &amp;lt;__main__.CManager object at 0x103fd8ed0&amp;gt;
+__exit__: &amp;lt;type &#39;exceptions.RuntimeError&#39;&amp;gt; 
+done something
+&amp;quot;&amp;quot;&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Simple context managers can be written as Generators:&lt;/p&gt;
+&lt;p&gt;Simple context managers can also be written using Generators and the &lt;code&gt;contextmanager&lt;/code&gt; decorator:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from contextlib import contextmanager
 
@@ -137,7 +158,7 @@ with closing(urllib.urlopen(&#39;http://google.com&#39;)) as page:
     int(&#39;hello&#39;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;seting-up-mocks-before-testing:7d4be8d77d94a7369e578988c199adc2&#34;&gt;Seting up mocks before testing&lt;/h2&gt;
+&lt;h2 id=&#34;setting-up-mocks-before-testing:7d4be8d77d94a7369e578988c199adc2&#34;&gt;Setting up mocks before testing&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;with mock.patch(&#39;a.b&#39;):
     call()

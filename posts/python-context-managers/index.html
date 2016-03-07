@@ -63,9 +63,11 @@
         <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://arnavk.com/"/>
         <meta itemprop="dateModified" content="2016-02-20T00:00:00&#43;00:00">
         <meta itemprop="headline" content="Python in the real world: Context Managers">
-        <meta itemprop="description" content="Context Managers are a language feature unique to Python. They are usually used for allocation and releasing of resources, but that is not their only use-case. They are useful for factoring out common setup and teardown code, or any pair of operations that need to be performed before or after a procedure.
+        <meta itemprop="description" content="Context Managers are one of the core language features that make Python unique. The with statement allows developers to write a common programming pattern in a concise and readable way. The following indented block gives a visual cue and make understanding the code easier. Understanding Context Managers is key to understanding the idea of Pythonic code.
 
-In this article, we will review some interesting real-world examples of their use.
+Context Managers are usually used for allocation and releasing of resources, but that is not their only use-case. They are useful for factoring out common setup and teardown code, or any pair of operations that need to be performed before or after a procedure.
+
+In this article, I will present some interesting real-world examples of their use, and hopefully encourage budding Pythonistas to explore them.
 ">
         <meta itemprop="url" content="http://arnavk.com/posts/python-context-managers/">
         <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
@@ -96,9 +98,11 @@ In this article, we will review some interesting real-world examples of their us
                    
           
 
-<p>Context Managers are a language feature unique to Python. They are usually used for allocation and releasing of resources, but that is not their only use-case. They are useful for factoring out common setup and teardown code, or any pair of operations that need to be performed before or after a procedure.</p>
+<p>Context Managers are one of the core language features that make Python unique. The <code>with</code> statement allows developers to write a common programming pattern in a concise and readable way. The following indented block gives a visual cue and make understanding the code easier. Understanding Context Managers is key to understanding the idea of <em>Pythonic</em> code.</p>
 
-<p>In this article, we will review some interesting real-world examples of their use.</p>
+<p>Context Managers are usually used for allocation and releasing of resources, but that is not their only use-case. They are useful for factoring out common setup and teardown code, or any pair of operations that need to be performed before or after a procedure.</p>
+
+<p>In this article, I will present some interesting real-world examples of their use, and hopefully encourage budding Pythonistas to explore them.</p>
 
 <h2 id="context-managers-in-summary:7d4be8d77d94a7369e578988c199adc2">Context Managers in summary</h2>
 
@@ -419,6 +423,12 @@ with Pool(processes=4) as pool:  # start 4 worker processes
 
 </code></pre>
 
+<h2 id="summary:7d4be8d77d94a7369e578988c199adc2">Summary</h2>
+
+<p>So in short, Context Managers can be used in a great variety of cases. Start using them now whenever you see the &ldquo;setup-teardown&rdquo; pattern, to write your Python code in a more Pythonic way.</p>
+
+<p>In future posts, we will explore Decorators and Metaclasses through examples of use as well.</p>
+
         </div>
 
 
@@ -426,9 +436,9 @@ with Pool(processes=4) as pool:  # start 4 worker processes
           <div class="section"><a href="http://arnavk.com/tags/python" class="tag">python</a> <a href="http://arnavk.com/tags/programming" class="tag">programming</a> <a href="http://arnavk.com/tags/examples" class="tag">examples</a> </div>
 
           <div class="section share">
-            <a href="http://www.facebook.com/sharer.php?src=bm&u=http%3a%2f%2farnavk.com%2fposts%2fpython-context-managers%2f&t=Python%20in%20the%20real%20world%3a%20Context%20Managers" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-facebook"></i></a>
+            
             <a href="http://twitter.com/intent/tweet?url=http%3a%2f%2farnavk.com%2fposts%2fpython-context-managers%2f&text=Python%20in%20the%20real%20world%3a%20Context%20Managers&tw_p=tweetbutton" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-twitter"></i></a>
-            <a href="https://plus.google.com/share?url=http%3a%2f%2farnavk.com%2fposts%2fpython-context-managers%2f" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-google-plus"></i></a>
+            <a href="https://plus.google.com/share?url=http%3a%2f%2farnavk.com%2fposts%2fpython-context-managers%2f" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;" data-size="large"><i class="fa fa-google-plus"></i></a>
             <a href="http://getpocket.com/edit?url=http%3a%2f%2farnavk.com%2fposts%2fpython-context-managers%2f&title=Python%20in%20the%20real%20world%3a%20Context%20Managers" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-get-pocket"></i></a>
           </div>
 
@@ -469,6 +479,7 @@ with Pool(processes=4) as pool:  # start 4 worker processes
 <li><a href="#redirecting-input-and-output-streams:7d4be8d77d94a7369e578988c199adc2">Redirecting input and output streams</a></li>
 <li><a href="#reading-and-writing-to-a-file-in-place:7d4be8d77d94a7369e578988c199adc2">Reading and writing to a file in-place</a></li>
 <li><a href="#managing-a-pool-of-processes:7d4be8d77d94a7369e578988c199adc2">Managing a pool of processes</a></li>
+<li><a href="#summary:7d4be8d77d94a7369e578988c199adc2">Summary</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -505,11 +516,11 @@ with Pool(processes=4) as pool:  # start 4 worker processes
     </div>
     <div class="list-group">
       
-      <a href="http://arnavk.com/tags/python" class="list-group-item">python</a>
-      
       <a href="http://arnavk.com/tags/programming" class="list-group-item">programming</a>
       
       <a href="http://arnavk.com/tags/examples" class="list-group-item">examples</a>
+      
+      <a href="http://arnavk.com/tags/python" class="list-group-item">python</a>
       
     </div>
   </div>

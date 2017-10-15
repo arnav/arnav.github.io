@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.15" />
+    <meta name="generator" content="Hugo 0.16" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans|Marcellus+SC'>
@@ -104,7 +104,7 @@ In this article, I will present some interesting real-world examples of their us
 
 <p>In this article, I will present some interesting real-world examples of their use, and hopefully encourage budding Pythonistas to explore them.</p>
 
-<h2 id="context-managers-in-summary:7d4be8d77d94a7369e578988c199adc2">Context Managers in summary</h2>
+<h2 id="context-managers-in-summary">Context Managers in summary</h2>
 
 <p>In simple terms, Context Managers make writing <strong>try-finally</strong> blocks easier.</p>
 
@@ -193,7 +193,7 @@ def context_manager_func():
         teardown()
 </code></pre>
 
-<h2 id="reliable-destructors:7d4be8d77d94a7369e578988c199adc2">Reliable destructors</h2>
+<h2 id="reliable-destructors">Reliable destructors</h2>
 
 <p>Context Managers give us a reliable method to clean up resources. Unlike other OO languages like C++ and Java, the Python destructor method <code>__del__</code> is not always guaranteed to be called. It is only called when the reference count to the object reaches zero. This might happen at the end of the current function, or at the end of the program, or never in case of circular references.</p>
 
@@ -203,7 +203,7 @@ def context_manager_func():
 
 <p>Let&rsquo;s look at a few examples of Context Managers in the real world. Experienced Python developers would have seen many of these examples, but maybe some of them are new.</p>
 
-<h2 id="making-sure-an-open-stream-is-closed-at-the-end:7d4be8d77d94a7369e578988c199adc2">Making sure an open stream is closed at the end</h2>
+<h2 id="making-sure-an-open-stream-is-closed-at-the-end">Making sure an open stream is closed at the end</h2>
 
 <p>The <code>open()</code> function is is the canonical example of context managers. It provides an open file handle which will be closed at the end of the block.</p>
 
@@ -224,7 +224,7 @@ with closing(urllib.urlopen('http://google.com')) as page:
     page.readlines()
 </code></pre>
 
-<h2 id="making-sure-an-exception-is-raised-in-testing:7d4be8d77d94a7369e578988c199adc2">Making sure an exception is raised in testing</h2>
+<h2 id="making-sure-an-exception-is-raised-in-testing">Making sure an exception is raised in testing</h2>
 
 <p>In unittest (2.7+):</p>
 
@@ -242,7 +242,7 @@ with closing(urllib.urlopen('http://google.com')) as page:
     int('hello')
 </code></pre>
 
-<h2 id="setting-up-mocks-before-testing:7d4be8d77d94a7369e578988c199adc2">Setting up mocks before testing</h2>
+<h2 id="setting-up-mocks-before-testing">Setting up mocks before testing</h2>
 
 <pre><code class="language-python">with mock.patch('a.b'):
     call()
@@ -252,7 +252,7 @@ with closing(urllib.urlopen('http://google.com')) as page:
 
 <p>When used as a decorator, <code>mock.patch</code> passes the newly created mock object (return value of <code>__enter__</code>) into the decorated function. ContextDecorator in Python 3, on the other hand, does not give you access to the return value of <code>__enter__</code> method.</p>
 
-<h2 id="synchronising-access-to-shared-resources:7d4be8d77d94a7369e578988c199adc2">Synchronising access to shared resources</h2>
+<h2 id="synchronising-access-to-shared-resources">Synchronising access to shared resources</h2>
 
 <pre><code class="language-python">with threading.RLock():
     access_resource()
@@ -286,7 +286,7 @@ with open_locked('data.csv', 'w') as outf:
     writer.writerows(someiterable)
 </code></pre>
 
-<h2 id="setting-up-the-python-execution-environment:7d4be8d77d94a7369e578988c199adc2">Setting up the Python execution environment</h2>
+<h2 id="setting-up-the-python-execution-environment">Setting up the Python execution environment</h2>
 
 <pre><code class="language-python">with decimal.localcontext() as ctx:
     # setup high precision operations within this thread
@@ -294,7 +294,7 @@ with open_locked('data.csv', 'w') as outf:
     math_operations()
 </code></pre>
 
-<h2 id="managing-database-connections-and-transactions:7d4be8d77d94a7369e578988c199adc2">Managing database connections and transactions</h2>
+<h2 id="managing-database-connections-and-transactions">Managing database connections and transactions</h2>
 
 <pre><code class="language-python">conn = sqlite3.connect(':memory:')
 with conn:
@@ -307,7 +307,7 @@ with conn:
 # conn.commit() called.
 </code></pre>
 
-<h2 id="wrapping-remote-connections-over-a-protocol:7d4be8d77d94a7369e578988c199adc2">Wrapping remote connections over a protocol:</h2>
+<h2 id="wrapping-remote-connections-over-a-protocol">Wrapping remote connections over a protocol:</h2>
 
 <pre><code class="language-python">class SomeProtocol:
      def __init__(self, host, port):
@@ -326,7 +326,7 @@ with SomeProtocol(host, port) as protocol:
      result = protocol.receive()
 </code></pre>
 
-<h2 id="timing-the-execution-of-a-code-block:7d4be8d77d94a7369e578988c199adc2">Timing the execution of a code block</h2>
+<h2 id="timing-the-execution-of-a-code-block">Timing the execution of a code block</h2>
 
 <pre><code class="language-python">import time
 
@@ -351,7 +351,7 @@ class Timer:
 fetching google homepage took: 0.047 seconds
 </code></pre>
 
-<h2 id="automating-remote-server-tasks-using-fabric:7d4be8d77d94a7369e578988c199adc2">Automating remote server tasks using Fabric</h2>
+<h2 id="automating-remote-server-tasks-using-fabric">Automating remote server tasks using Fabric</h2>
 
 <p>Fabric provides many interesting <a href="http://docs.fabfile.org/en/latest/api/core/context_managers.html">context managers</a> to help automate deployment and other local and remote tasks.</p>
 
@@ -363,7 +363,7 @@ with cd('/path/to/app'), prefix('workon myvenv'):
     run('./manage.py loaddata myfixture')
 </code></pre>
 
-<h2 id="create-and-use-a-temporary-file-and-delete-at-the-end:7d4be8d77d94a7369e578988c199adc2">Create and use a temporary file and delete at the end</h2>
+<h2 id="create-and-use-a-temporary-file-and-delete-at-the-end">Create and use a temporary file and delete at the end</h2>
 
 <pre><code class="language-python">import tempfile
 
@@ -376,7 +376,7 @@ with tempfile.NamedTemporaryFile() as tf:
 # Pass `delete=False` to NamedTemporaryFile to disable auto-delete.
 </code></pre>
 
-<h2 id="redirecting-input-and-output-streams:7d4be8d77d94a7369e578988c199adc2">Redirecting input and output streams</h2>
+<h2 id="redirecting-input-and-output-streams">Redirecting input and output streams</h2>
 
 <p>In Python 3.4+, the <a href="https://docs.python.org/3/library/contextlib.html?highlight=contextlib#contextlib.redirect_stdout"><code>redirect_stdout</code></a> and <a href="https://docs.python.org/3/library/contextlib.html?highlight=contextlib#contextlib.redirect_stderr"><code>redirect_stderr</code></a> context manager can be used to temporarily redirect <code>stdout</code> and <code>stderr</code> streams.</p>
 
@@ -387,7 +387,7 @@ with tempfile.NamedTemporaryFile() as tf:
 
 <p><code>redirect_stdout</code> only redirects stdout calls from Python, but not from C library code. See this <a href="http://eli.thegreenplace.net/2015/redirecting-all-kinds-of-stdout-in-python/">blog post by Eli Bendersky</a> on how to redirect all streams.</p>
 
-<h2 id="reading-and-writing-to-a-file-in-place:7d4be8d77d94a7369e578988c199adc2">Reading and writing to a file in-place</h2>
+<h2 id="reading-and-writing-to-a-file-in-place">Reading and writing to a file in-place</h2>
 
 <p>See <a href="http://www.zopatista.com/python/2013/11/26/inplace-file-rewriting/">this example by Martijn Pieters</a> of a context manager that allow you to update the same file while reading it line-by-line.</p>
 
@@ -402,7 +402,7 @@ with inplace(csvfilename, 'rb') as (infh, outfh):
         writer.writerow(row)
 </code></pre>
 
-<h2 id="managing-a-pool-of-processes:7d4be8d77d94a7369e578988c199adc2">Managing a pool of processes</h2>
+<h2 id="managing-a-pool-of-processes">Managing a pool of processes</h2>
 
 <p>Python&rsquo;s <code>multiprocessing</code> library provides a bunch of context managers to manage connections, <a href="https://docs.python.org/3/library/multiprocessing.html?highlight=multiprocessing#module-multiprocessing.pool">pools</a> and OS-level resource locks.</p>
 
@@ -423,7 +423,7 @@ with Pool(processes=4) as pool:  # start 4 worker processes
 
 </code></pre>
 
-<h2 id="summary:7d4be8d77d94a7369e578988c199adc2">Summary</h2>
+<h2 id="summary">Summary</h2>
 
 <p>So in short, Context Managers can be used in a great variety of cases. Start using them now whenever you see the &ldquo;setup-teardown&rdquo; pattern, to write your Python code in a more Pythonic way.</p>
 
@@ -482,22 +482,22 @@ with Pool(processes=4) as pool:  # start 4 worker processes
 <ul>
 <li>
 <ul>
-<li><a href="#context-managers-in-summary:7d4be8d77d94a7369e578988c199adc2">Context Managers in summary</a></li>
-<li><a href="#reliable-destructors:7d4be8d77d94a7369e578988c199adc2">Reliable destructors</a></li>
-<li><a href="#making-sure-an-open-stream-is-closed-at-the-end:7d4be8d77d94a7369e578988c199adc2">Making sure an open stream is closed at the end</a></li>
-<li><a href="#making-sure-an-exception-is-raised-in-testing:7d4be8d77d94a7369e578988c199adc2">Making sure an exception is raised in testing</a></li>
-<li><a href="#setting-up-mocks-before-testing:7d4be8d77d94a7369e578988c199adc2">Setting up mocks before testing</a></li>
-<li><a href="#synchronising-access-to-shared-resources:7d4be8d77d94a7369e578988c199adc2">Synchronising access to shared resources</a></li>
-<li><a href="#setting-up-the-python-execution-environment:7d4be8d77d94a7369e578988c199adc2">Setting up the Python execution environment</a></li>
-<li><a href="#managing-database-connections-and-transactions:7d4be8d77d94a7369e578988c199adc2">Managing database connections and transactions</a></li>
-<li><a href="#wrapping-remote-connections-over-a-protocol:7d4be8d77d94a7369e578988c199adc2">Wrapping remote connections over a protocol:</a></li>
-<li><a href="#timing-the-execution-of-a-code-block:7d4be8d77d94a7369e578988c199adc2">Timing the execution of a code block</a></li>
-<li><a href="#automating-remote-server-tasks-using-fabric:7d4be8d77d94a7369e578988c199adc2">Automating remote server tasks using Fabric</a></li>
-<li><a href="#create-and-use-a-temporary-file-and-delete-at-the-end:7d4be8d77d94a7369e578988c199adc2">Create and use a temporary file and delete at the end</a></li>
-<li><a href="#redirecting-input-and-output-streams:7d4be8d77d94a7369e578988c199adc2">Redirecting input and output streams</a></li>
-<li><a href="#reading-and-writing-to-a-file-in-place:7d4be8d77d94a7369e578988c199adc2">Reading and writing to a file in-place</a></li>
-<li><a href="#managing-a-pool-of-processes:7d4be8d77d94a7369e578988c199adc2">Managing a pool of processes</a></li>
-<li><a href="#summary:7d4be8d77d94a7369e578988c199adc2">Summary</a></li>
+<li><a href="#context-managers-in-summary">Context Managers in summary</a></li>
+<li><a href="#reliable-destructors">Reliable destructors</a></li>
+<li><a href="#making-sure-an-open-stream-is-closed-at-the-end">Making sure an open stream is closed at the end</a></li>
+<li><a href="#making-sure-an-exception-is-raised-in-testing">Making sure an exception is raised in testing</a></li>
+<li><a href="#setting-up-mocks-before-testing">Setting up mocks before testing</a></li>
+<li><a href="#synchronising-access-to-shared-resources">Synchronising access to shared resources</a></li>
+<li><a href="#setting-up-the-python-execution-environment">Setting up the Python execution environment</a></li>
+<li><a href="#managing-database-connections-and-transactions">Managing database connections and transactions</a></li>
+<li><a href="#wrapping-remote-connections-over-a-protocol">Wrapping remote connections over a protocol:</a></li>
+<li><a href="#timing-the-execution-of-a-code-block">Timing the execution of a code block</a></li>
+<li><a href="#automating-remote-server-tasks-using-fabric">Automating remote server tasks using Fabric</a></li>
+<li><a href="#create-and-use-a-temporary-file-and-delete-at-the-end">Create and use a temporary file and delete at the end</a></li>
+<li><a href="#redirecting-input-and-output-streams">Redirecting input and output streams</a></li>
+<li><a href="#reading-and-writing-to-a-file-in-place">Reading and writing to a file in-place</a></li>
+<li><a href="#managing-a-pool-of-processes">Managing a pool of processes</a></li>
+<li><a href="#summary">Summary</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -510,6 +510,8 @@ with Pool(processes=4) as pool:  # start 4 worker processes
       <h2 class="panel-title">Latest Posts</h2>
     </div>
     <div class="list-group">
+      
+      <a href="http://arnavk.com/posts/python-executable-modules/" class="list-group-item">Useful Executable Modules in the Python Standard Library</a>
       
       <a href="http://arnavk.com/posts/python-context-managers/" class="list-group-item">Python in the real world: Context Managers</a>
       
@@ -534,11 +536,11 @@ with Pool(processes=4) as pool:  # start 4 worker processes
     </div>
     <div class="list-group">
       
-      <a href="http://arnavk.com/tags/python" class="list-group-item">python</a>
+      <a href="http://arnavk.com/tags/examples" class="list-group-item">examples</a>
       
       <a href="http://arnavk.com/tags/programming" class="list-group-item">programming</a>
       
-      <a href="http://arnavk.com/tags/examples" class="list-group-item">examples</a>
+      <a href="http://arnavk.com/tags/python" class="list-group-item">python</a>
       
     </div>
   </div>
@@ -557,7 +559,7 @@ with Pool(processes=4) as pool:  # start 4 worker processes
 
     <footer class="site">
       <div class="container">
-        <p>&copy; 2016 Arnav Khare</p>
+        <p>&copy; 2017 Arnav Khare</p>
       </div>
     </footer>
 

@@ -9,20 +9,19 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
-    <link rel="stylesheet" href="http://arnavk.com/css/styles.css">
-    <link rel="stylesheet" href="http://arnavk.com/css/custom.css">
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://arnavk.com//index.xml">
+    <link rel="stylesheet" href="http://arnavk.org/css/styles.css">
+    <link rel="stylesheet" href="http://arnavk.org/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://arnavk.org/index.xml">
 
     
-    <title>Python in the real world: Context Managers - Arnav Khare</title>
-    <meta property='og:title' content="Python in the real world: Context Managers - Arnav Khare">
-    <meta property="og:type" content="article">
+    <title>Arnav Khare</title>
+    <meta property='og:title' content="Arnav Khare">
+    <meta property="og:type" content="website">
     
 
-    <meta property="og:url" content="http://arnavk.com/posts/python-context-managers/">
-    <meta name="description" content="Using examples to explore how Python Context Managers are used in the real world.">
+    <meta property="og:url" content="http://arnavk.org">
     
-
+    
   </head>
 
   <body>
@@ -37,7 +36,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://arnavk.com/">Arnav Khare</a>
+            <a class="navbar-brand" href="http://arnavk.org">Arnav Khare</a>
           </div>
 
           <div id="navbar" class="collapse navbar-collapse">
@@ -48,10 +47,6 @@
       </nav>
     </header>
 
-    <div class="site">
-      <div class="container">
-
-
 
 <div class="single">
 
@@ -60,24 +55,21 @@
 
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
-        <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://arnavk.com/"/>
+        <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://arnavk.org"/>
         <meta itemprop="dateModified" content="2016-02-20T00:00:00&#43;00:00">
         <meta itemprop="headline" content="Python in the real world: Context Managers">
         <meta itemprop="description" content="Context Managers are one of the core language features that make Python unique. The with statement allows developers to write a common programming pattern in a concise and readable way. The following indented block gives a visual cue and make understanding the code easier. Understanding Context Managers is key to understanding the idea of Pythonic code.
-
 Context Managers are usually used for allocation and releasing of resources, but that is not their only use-case. They are useful for factoring out common setup and teardown code, or any pair of operations that need to be performed before or after a procedure.
-
-In this article, I will present some interesting real-world examples of their use, and hopefully encourage budding Pythonistas to explore them.
-">
-        <meta itemprop="url" content="http://arnavk.com/posts/python-context-managers/">
+In this article, I will present some interesting real-world examples of their use, and hopefully encourage budding Pythonistas to explore them.">
+        <meta itemprop="url" content="http://arnavk.org/posts/python-context-managers/">
         <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-          <meta itemprop="url" content="http://arnavk.com/images/default.jpg" />
+          <meta itemprop="url" content="http://arnavk.orgimages/default.jpg" />
           <meta itemprop="width" content="800">
           <meta itemprop="height" content="800">
         </div>
         <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
           <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
-            <meta itemprop="url" content="http://arnavk.com/images/logo.jpg">
+            <meta itemprop="url" content="http://arnavk.orgimages/logo.jpg">
             <meta itemprop="width" content="100">
             <meta itemprop="height" content="100">
           </div>
@@ -96,48 +88,36 @@ In this article, I will present some interesting real-world examples of their us
         
         <div class="article-body" itemprop="articleBody">
                    
-          
-
-<p>Context Managers are one of the core language features that make Python unique. The <code>with</code> statement allows developers to write a common programming pattern in a concise and readable way. The following indented block gives a visual cue and make understanding the code easier. Understanding Context Managers is key to understanding the idea of <em>Pythonic</em> code.</p>
-
+          <p>Context Managers are one of the core language features that make Python unique. The <code>with</code> statement allows developers to write a common programming pattern in a concise and readable way. The following indented block gives a visual cue and make understanding the code easier. Understanding Context Managers is key to understanding the idea of <em>Pythonic</em> code.</p>
 <p>Context Managers are usually used for allocation and releasing of resources, but that is not their only use-case. They are useful for factoring out common setup and teardown code, or any pair of operations that need to be performed before or after a procedure.</p>
-
 <p>In this article, I will present some interesting real-world examples of their use, and hopefully encourage budding Pythonistas to explore them.</p>
-
 <h2 id="context-managers-in-summary">Context Managers in summary</h2>
-
 <p>In simple terms, Context Managers make writing <strong>try-finally</strong> blocks easier.</p>
-
-<pre><code class="language-python"># In Python, code with common setup and teardown:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># In Python, code with common setup and teardown:</span>
 
 setup()
-try:
+<span style="color:#66d9ef">try</span>:
     do_work()
-finally:
+<span style="color:#66d9ef">finally</span>:
     teardown()
 
-# can be translated roughly to:
+<span style="color:#75715e"># can be translated roughly to:</span>
 
-cm = ContextManager()
-obj = cm.__enter__()
-try:
-    do_work(obj)    # use obj as needed (see examples below)
-finally:
-    cm.__exit__()
+cm <span style="color:#f92672">=</span> ContextManager()
+obj <span style="color:#f92672">=</span> cm<span style="color:#f92672">.</span>__enter__()
+<span style="color:#66d9ef">try</span>:
+    do_work(obj)    <span style="color:#75715e"># use obj as needed (see examples below)</span>
+<span style="color:#66d9ef">finally</span>:
+    cm<span style="color:#f92672">.</span>__exit__()
 
-# this can be written more succinctly using the `with` statement:
+<span style="color:#75715e"># this can be written more succinctly using the `with` statement:</span>
 
-with ContextManager() as obj:
+<span style="color:#66d9ef">with</span> ContextManager() <span style="color:#66d9ef">as</span> obj:
     do_work()
 
-</code></pre>
-
-<p>The expression following the <code>with</code> keyword should return an object that follows the Context Manager protocol. This can be a class instantiation or a function call that returns the Context Manager object.</p>
-
+</code></pre></div><p>The expression following the <code>with</code> keyword should return an object that follows the Context Manager protocol. This can be a class instantiation or a function call that returns the Context Manager object.</p>
 <p>The object returned must follow the <strong>Context Manager protocol</strong> which specifies two special methods, <code>__enter__</code> and <code>__exit__</code>.</p>
-
 <p>Some important points to remember are:</p>
-
 <ul>
 <li><code>__enter__</code> should return an object that is assigned to the variable after <code>as</code>. By default it is <code>None</code>, and is optional. A common pattern is to return <code>self</code> and keep the functionality required within the same class.</li>
 <li><code>__exit__</code> is called on the original Context Manager object, not the object returned by <code>__enter__</code>.</li>
@@ -145,301 +125,222 @@ with ContextManager() as obj:
 <li>Once the code block is entered, <code>__exit__</code> is always called, even if an exception is raised in the code block.</li>
 <li>If <code>__exit__</code> returns <code>True</code>, the exception is suppressed.</li>
 </ul>
-
-<pre><code class="language-python">class CManager(object):
-    def __init__(self):
-        print '__init__'
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CManager</span>(object):
+    <span style="color:#66d9ef">def</span> __init__(self):
+        <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;__init__&#39;</span>
     
-    def __enter__(self):
-        print '__enter__'
-        return self
+    <span style="color:#66d9ef">def</span> __enter__(self):
+        <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;__enter__&#39;</span>
+        <span style="color:#66d9ef">return</span> self
     
-    def __exit__(self, type, value, traceback):
-        print '__exit__:', type, value
-        return True  # Suppress this exception
+    <span style="color:#66d9ef">def</span> __exit__(self, type, value, traceback):
+        <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;__exit__:&#39;</span>, type, value
+        <span style="color:#66d9ef">return</span> True  <span style="color:#75715e"># Suppress this exception</span>
 
-    def __del__(self):
-        print '__del__', self
+    <span style="color:#66d9ef">def</span> __del__(self):
+        <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;__del__&#39;</span>, self
 
-with CManager() as c:
-    print 'doing something with c:', c
-    raise RuntimeError()
-    print 'finished doing something'
-print 'done something'
+<span style="color:#66d9ef">with</span> CManager() <span style="color:#66d9ef">as</span> c:
+    <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;doing something with c:&#39;</span>, c
+    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">RuntimeError</span>()
+    <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;finished doing something&#39;</span>
+<span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;done something&#39;</span>
 
-&quot;&quot;&quot;
-# outputs:
-__init__
-__enter__
-doing something with c: &lt;__main__.CManager object at 0x103fd8ed0&gt;
-__exit__: &lt;type 'exceptions.RuntimeError'&gt; 
-done something
-&quot;&quot;&quot;
-</code></pre>
+<span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74"># outputs:
+</span><span style="color:#e6db74">__init__
+</span><span style="color:#e6db74">__enter__
+</span><span style="color:#e6db74">doing something with c: &lt;__main__.CManager object at 0x103fd8ed0&gt;
+</span><span style="color:#e6db74">__exit__: &lt;type &#39;exceptions.RuntimeError&#39;&gt; 
+</span><span style="color:#e6db74">done something
+</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><p>Simple context managers can also be written using Generators and the <code>contextmanager</code> decorator:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> contextlib <span style="color:#f92672">import</span> contextmanager
 
-<p>Simple context managers can also be written using Generators and the <code>contextmanager</code> decorator:</p>
-
-<pre><code class="language-python">from contextlib import contextmanager
-
-@contextmanager
-def context_manager_func():
+<span style="color:#a6e22e">@contextmanager</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">context_manager_func</span>():
     setup()
 
-    # yield must be wrapped in try/finally
-    # to trap any exceptions raised in the calling code
-    try:
-        yield
-    finally:
+    <span style="color:#75715e"># yield must be wrapped in try/finally</span>
+    <span style="color:#75715e"># to trap any exceptions raised in the calling code</span>
+    <span style="color:#66d9ef">try</span>:
+        <span style="color:#66d9ef">yield</span>
+    <span style="color:#66d9ef">finally</span>:
         teardown()
-</code></pre>
-
-<h2 id="reliable-destructors">Reliable destructors</h2>
-
+</code></pre></div><h2 id="reliable-destructors">Reliable destructors</h2>
 <p>Context Managers give us a reliable method to clean up resources. Unlike other OO languages like C++ and Java, the Python destructor method <code>__del__</code> is not always guaranteed to be called. It is only called when the reference count to the object reaches zero. This might happen at the end of the current function, or at the end of the program, or never in case of circular references.</p>
-
 <p>Up until Python 3.4, if all objects in a reference cycle have <code>__del__</code> method, Python would not call it, and garbage collect the objects. This is because Python has no safe way of knowing which order to destroy these objects in.</p>
-
 <p>Starting from Python 3.4, cycles with <code>__del__</code> objects <a href="https://www.python.org/dev/peps/pep-0442/">can now be garbage collected</a>. The order in which they are call is undefined though.</p>
-
 <p>Let&rsquo;s look at a few examples of Context Managers in the real world. Experienced Python developers would have seen many of these examples, but maybe some of them are new.</p>
-
 <h2 id="making-sure-an-open-stream-is-closed-at-the-end">Making sure an open stream is closed at the end</h2>
-
 <p>The <code>open()</code> function is is the canonical example of context managers. It provides an open file handle which will be closed at the end of the block.</p>
-
-<pre><code class="language-python">with open(path, mode) as f:
-    f.read()
-</code></pre>
-
-<p><code>StringIO</code> objects behave in the same way:</p>
-
-<pre><code class="language-python">with io.StringIO() as b:
-     b.write(‘foo’)
-</code></pre>
-
-<p>The <code>closing</code> context manager calls <code>close()</code> on any object if the method exists.</p>
-
-<pre><code class="language-python">from contextlib import closing
-with closing(urllib.urlopen('http://google.com')) as page:
-    page.readlines()
-</code></pre>
-
-<h2 id="making-sure-an-exception-is-raised-in-testing">Making sure an exception is raised in testing</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> open(path, mode) <span style="color:#66d9ef">as</span> f:
+    f<span style="color:#f92672">.</span>read()
+</code></pre></div><p><code>StringIO</code> objects behave in the same way:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> io<span style="color:#f92672">.</span>StringIO() <span style="color:#66d9ef">as</span> b:
+     b<span style="color:#f92672">.</span>write(<span style="color:#960050;background-color:#1e0010">‘</span>foo<span style="color:#960050;background-color:#1e0010">’</span>)
+</code></pre></div><p>The <code>closing</code> context manager calls <code>close()</code> on any object if the method exists.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> contextlib <span style="color:#f92672">import</span> closing
+<span style="color:#66d9ef">with</span> closing(urllib<span style="color:#f92672">.</span>urlopen(<span style="color:#e6db74">&#39;http://google.com&#39;</span>)) <span style="color:#66d9ef">as</span> page:
+    page<span style="color:#f92672">.</span>readlines()
+</code></pre></div><h2 id="making-sure-an-exception-is-raised-in-testing">Making sure an exception is raised in testing</h2>
 <p>In unittest (2.7+):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_split</span>(self):
+    <span style="color:#66d9ef">with</span> self<span style="color:#f92672">.</span>assertRaises(<span style="color:#a6e22e">TypeError</span>):
+        <span style="color:#e6db74">&#39;hello world&#39;</span><span style="color:#f92672">.</span>split(<span style="color:#ae81ff">2</span>)
 
-<pre><code class="language-python">def test_split(self):
-    with self.assertRaises(TypeError):
-        'hello world'.split(2)
-
-    with self.assertRaisesRegexp(TypeError, 'expected a string.*object$'):
-        'hello world'.split(2)
-</code></pre>
-
-<p>E.g. in Pytest</p>
-
-<pre><code class="language-python">with pytest.raises(ValueError):
-    int('hello')
-</code></pre>
-
-<h2 id="setting-up-mocks-before-testing">Setting up mocks before testing</h2>
-
-<pre><code class="language-python">with mock.patch('a.b'):
+    <span style="color:#66d9ef">with</span> self<span style="color:#f92672">.</span>assertRaisesRegexp(<span style="color:#a6e22e">TypeError</span>, <span style="color:#e6db74">&#39;expected a string.*object$&#39;</span>):
+        <span style="color:#e6db74">&#39;hello world&#39;</span><span style="color:#f92672">.</span>split(<span style="color:#ae81ff">2</span>)
+</code></pre></div><p>E.g. in Pytest</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> pytest<span style="color:#f92672">.</span>raises(<span style="color:#a6e22e">ValueError</span>):
+    int(<span style="color:#e6db74">&#39;hello&#39;</span>)
+</code></pre></div><h2 id="setting-up-mocks-before-testing">Setting up mocks before testing</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> mock<span style="color:#f92672">.</span>patch(<span style="color:#e6db74">&#39;a.b&#39;</span>):
     call()
-</code></pre>
-
-<p><code>mock.patch</code> is an example of a <a href="https://docs.python.org/3.5/library/contextlib.html#using-a-context-manager-as-a-function-decorator">context manager that can also be used as a decorator</a>. Python 3 comes with a utility <a href="https://docs.python.org/3.5/library/contextlib.html#contextlib.ContextDecorator">ContextDecorator</a> that makes it easy to write such context manager-decorators.</p>
-
+</code></pre></div><p><code>mock.patch</code> is an example of a <a href="https://docs.python.org/3.5/library/contextlib.html#using-a-context-manager-as-a-function-decorator">context manager that can also be used as a decorator</a>. Python 3 comes with a utility <a href="https://docs.python.org/3.5/library/contextlib.html#contextlib.ContextDecorator">ContextDecorator</a> that makes it easy to write such context manager-decorators.</p>
 <p>When used as a decorator, <code>mock.patch</code> passes the newly created mock object (return value of <code>__enter__</code>) into the decorated function. ContextDecorator in Python 3, on the other hand, does not give you access to the return value of <code>__enter__</code> method.</p>
-
 <h2 id="synchronising-access-to-shared-resources">Synchronising access to shared resources</h2>
-
-<pre><code class="language-python">with threading.RLock():
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> threading<span style="color:#f92672">.</span>RLock():
     access_resource()
-</code></pre>
-
-<p>The with statement in this case, calls <code>lock.acquire()</code> at entry and <code>lock.release()</code> on exit.</p>
-
+</code></pre></div><p>The with statement in this case, calls <code>lock.acquire()</code> at entry and <code>lock.release()</code> on exit.</p>
 <p>Locks are types of <a href="https://docs.python.org/3.5/library/contextlib.html#reentrant-context-managers">Reentrant context managers</a> which allow you to re-enter the same context manager many times and also reuse it.</p>
-
 <p>In the <code>threading</code> module, Lock, RLock, Condition, Semaphore, BoundedSemaphore can be used as context managers.</p>
-
 <p>A similar idea can be used for locking files while accessing them. For e.g. the <a href="https://code.activestate.com/recipes/577911/">pidfile context manager</a> uses <code>fcntl.flock()</code> to obtain a file lock on a daemon pidfile.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> fcntl<span style="color:#f92672">,</span> csv<span style="color:#f92672">,</span> sys
 
-<pre><code class="language-python">import fcntl, csv, sys
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">open_locked</span>:
+    <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+        self<span style="color:#f92672">.</span>fd <span style="color:#f92672">=</span> open(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
 
-class open_locked:
-    def __init__(self, *args, **kwargs):
-        self.fd = open(*args, **kwargs)
+    <span style="color:#66d9ef">def</span> __enter__(self):
+        fcntl<span style="color:#f92672">.</span>flock(self<span style="color:#f92672">.</span>fd, fcntl<span style="color:#f92672">.</span>LOCK_EX)
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>fd<span style="color:#f92672">.</span>__enter__()
 
-    def __enter__(self):
-        fcntl.flock(self.fd, fcntl.LOCK_EX)
-        return self.fd.__enter__()
-
-    def __exit__(self, type, value, traceback):
-        fcntl.flock(self.fd, fcntl.LOCK_UN)
-        return self.fd.__exit__()
+    <span style="color:#66d9ef">def</span> __exit__(self, type, value, traceback):
+        fcntl<span style="color:#f92672">.</span>flock(self<span style="color:#f92672">.</span>fd, fcntl<span style="color:#f92672">.</span>LOCK_UN)
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>fd<span style="color:#f92672">.</span>__exit__()
 
 
-with open_locked('data.csv', 'w') as outf:
-    writer = csv.writer(outf)
-    writer.writerows(someiterable)
-</code></pre>
-
-<h2 id="setting-up-the-python-execution-environment">Setting up the Python execution environment</h2>
-
-<pre><code class="language-python">with decimal.localcontext() as ctx:
-    # setup high precision operations within this thread
-    ctx.prec = 42       
+<span style="color:#66d9ef">with</span> open_locked(<span style="color:#e6db74">&#39;data.csv&#39;</span>, <span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> outf:
+    writer <span style="color:#f92672">=</span> csv<span style="color:#f92672">.</span>writer(outf)
+    writer<span style="color:#f92672">.</span>writerows(someiterable)
+</code></pre></div><h2 id="setting-up-the-python-execution-environment">Setting up the Python execution environment</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> decimal<span style="color:#f92672">.</span>localcontext() <span style="color:#66d9ef">as</span> ctx:
+    <span style="color:#75715e"># setup high precision operations within this thread</span>
+    ctx<span style="color:#f92672">.</span>prec <span style="color:#f92672">=</span> <span style="color:#ae81ff">42</span>       
     math_operations()
-</code></pre>
+</code></pre></div><h2 id="managing-database-connections-and-transactions">Managing database connections and transactions</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">conn <span style="color:#f92672">=</span> sqlite3<span style="color:#f92672">.</span>connect(<span style="color:#e6db74">&#39;:memory:&#39;</span>)
+<span style="color:#66d9ef">with</span> conn:
+    <span style="color:#75715e"># start a new db transaction</span>
+    conn<span style="color:#f92672">.</span>execute(<span style="color:#e6db74">&#39;create table mytable (id int primary key, name char(50))&#39;</span>)
+    conn<span style="color:#f92672">.</span>execute(<span style="color:#e6db74">&#39;insert into mytable(id) values (?)&#39;</span>, (<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;avni&#39;</span>))
+    <span style="color:#75715e"># if there was an error, table would not be created in database </span>
+    <span style="color:#75715e"># as whole transaction is rolled back</span>
+    <span style="color:#f92672">...</span>
+<span style="color:#75715e"># conn.commit() called.</span>
+</code></pre></div><h2 id="wrapping-remote-connections-over-a-protocol">Wrapping remote connections over a protocol:</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SomeProtocol</span>:
+     <span style="color:#66d9ef">def</span> __init__(self, host, port):
+          self<span style="color:#f92672">.</span>host, self<span style="color:#f92672">.</span>port <span style="color:#f92672">=</span> host, port
+     <span style="color:#66d9ef">def</span> __enter__(self):
+          self<span style="color:#f92672">.</span>_client <span style="color:#f92672">=</span> socket()
+          self<span style="color:#f92672">.</span>_client<span style="color:#f92672">.</span>connect((self<span style="color:#f92672">.</span>host, self<span style="color:#f92672">.</span>port))
+          <span style="color:#66d9ef">return</span> self
+     <span style="color:#66d9ef">def</span> __exit__(self, exception, value, traceback):
+          self<span style="color:#f92672">.</span>_client<span style="color:#f92672">.</span>close()
+     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">send</span>(self, payload): <span style="color:#f92672">...</span>
+     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">receive</span>(self): <span style="color:#f92672">...</span>
 
-<h2 id="managing-database-connections-and-transactions">Managing database connections and transactions</h2>
+<span style="color:#66d9ef">with</span> SomeProtocol(host, port) <span style="color:#66d9ef">as</span> protocol:
+     protocol<span style="color:#f92672">.</span>send([<span style="color:#e6db74">&#39;get&#39;</span>, signal])
+     result <span style="color:#f92672">=</span> protocol<span style="color:#f92672">.</span>receive()
+</code></pre></div><h2 id="timing-the-execution-of-a-code-block">Timing the execution of a code block</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> time
 
-<pre><code class="language-python">conn = sqlite3.connect(':memory:')
-with conn:
-    # start a new db transaction
-    conn.execute('create table mytable (id int primary key, name char(50))')
-    conn.execute('insert into mytable(id) values (?)', (1, 'avni'))
-    # if there was an error, table would not be created in database 
-    # as whole transaction is rolled back
-    ...
-# conn.commit() called.
-</code></pre>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Timer</span>:
+    <span style="color:#66d9ef">def</span> __init__(self, name):
+        self<span style="color:#f92672">.</span>name <span style="color:#f92672">=</span> name
 
-<h2 id="wrapping-remote-connections-over-a-protocol">Wrapping remote connections over a protocol:</h2>
+    <span style="color:#66d9ef">def</span> __enter__(self):
+        self<span style="color:#f92672">.</span>start <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
 
-<pre><code class="language-python">class SomeProtocol:
-     def __init__(self, host, port):
-          self.host, self.port = host, port
-     def __enter__(self):
-          self._client = socket()
-          self._client.connect((self.host, self.port))
-          return self
-     def __exit__(self, exception, value, traceback):
-          self._client.close()
-     def send(self, payload): ...
-     def receive(self): ...
-
-with SomeProtocol(host, port) as protocol:
-     protocol.send(['get', signal])
-     result = protocol.receive()
-</code></pre>
-
-<h2 id="timing-the-execution-of-a-code-block">Timing the execution of a code block</h2>
-
-<pre><code class="language-python">import time
-
-class Timer:
-    def __init__(self, name):
-        self.name = name
-
-    def __enter__(self):
-        self.start = time.time()
-
-    def __exit__(self, *args):
-        self.end = time.time()
-        self.interval = self.end - self.start
-        print(&quot;%s took: %0.3f seconds&quot; % (self.name, self.interval))
-        return False
-</code></pre>
-
-<pre><code class="language-python">&gt;&gt;&gt; with Timer('fetching google homepage'):
-...     conn = httplib.HTTPConnection('google.com')
-...     conn.request('GET', '/')
-... 
-fetching google homepage took: 0.047 seconds
-</code></pre>
-
-<h2 id="automating-remote-server-tasks-using-fabric">Automating remote server tasks using Fabric</h2>
-
+    <span style="color:#66d9ef">def</span> __exit__(self, <span style="color:#f92672">*</span>args):
+        self<span style="color:#f92672">.</span>end <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+        self<span style="color:#f92672">.</span>interval <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>end <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>start
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> took: </span><span style="color:#e6db74">%0.3f</span><span style="color:#e6db74"> seconds&#34;</span> <span style="color:#f92672">%</span> (self<span style="color:#f92672">.</span>name, self<span style="color:#f92672">.</span>interval))
+        <span style="color:#66d9ef">return</span> False
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">with</span> Timer(<span style="color:#e6db74">&#39;fetching google homepage&#39;</span>):
+<span style="color:#f92672">...</span>     conn <span style="color:#f92672">=</span> httplib<span style="color:#f92672">.</span>HTTPConnection(<span style="color:#e6db74">&#39;google.com&#39;</span>)
+<span style="color:#f92672">...</span>     conn<span style="color:#f92672">.</span>request(<span style="color:#e6db74">&#39;GET&#39;</span>, <span style="color:#e6db74">&#39;/&#39;</span>)
+<span style="color:#f92672">...</span> 
+fetching google homepage took: <span style="color:#ae81ff">0.047</span> seconds
+</code></pre></div><h2 id="automating-remote-server-tasks-using-fabric">Automating remote server tasks using Fabric</h2>
 <p>Fabric provides many interesting <a href="http://docs.fabfile.org/en/latest/api/core/context_managers.html">context managers</a> to help automate deployment and other local and remote tasks.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># In Python 2.7+ multilple context managers can be combined using commas</span>
+<span style="color:#75715e"># In Python 2.6, `contextlib.nested` can be used for the same purpose</span>
 
-<pre><code class="language-python"># In Python 2.7+ multilple context managers can be combined using commas
-# In Python 2.6, `contextlib.nested` can be used for the same purpose
+<span style="color:#66d9ef">with</span> cd(<span style="color:#e6db74">&#39;/path/to/app&#39;</span>), prefix(<span style="color:#e6db74">&#39;workon myvenv&#39;</span>):
+    run(<span style="color:#e6db74">&#39;./manage.py syncdb&#39;</span>)
+    run(<span style="color:#e6db74">&#39;./manage.py loaddata myfixture&#39;</span>)
+</code></pre></div><h2 id="create-and-use-a-temporary-file-and-delete-at-the-end">Create and use a temporary file and delete at the end</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> tempfile
 
-with cd('/path/to/app'), prefix('workon myvenv'):
-    run('./manage.py syncdb')
-    run('./manage.py loaddata myfixture')
-</code></pre>
+<span style="color:#66d9ef">with</span> tempfile<span style="color:#f92672">.</span>NamedTemporaryFile() <span style="color:#66d9ef">as</span> tf:
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#39;Writing to tempfile:&#39;</span>, tf<span style="color:#f92672">.</span>name)
+    tf<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#39;Some data&#39;</span>)
+    tf<span style="color:#f92672">.</span>flush()
 
-<h2 id="create-and-use-a-temporary-file-and-delete-at-the-end">Create and use a temporary file and delete at the end</h2>
-
-<pre><code class="language-python">import tempfile
-
-with tempfile.NamedTemporaryFile() as tf:
-    print('Writing to tempfile:', tf.name)
-    tf.write('Some data')
-    tf.flush()
-
-# By default the temporary file created is deleted when file is closed
-# Pass `delete=False` to NamedTemporaryFile to disable auto-delete.
-</code></pre>
-
-<h2 id="redirecting-input-and-output-streams">Redirecting input and output streams</h2>
-
+<span style="color:#75715e"># By default the temporary file created is deleted when file is closed</span>
+<span style="color:#75715e"># Pass `delete=False` to NamedTemporaryFile to disable auto-delete.</span>
+</code></pre></div><h2 id="redirecting-input-and-output-streams">Redirecting input and output streams</h2>
 <p>In Python 3.4+, the <a href="https://docs.python.org/3/library/contextlib.html?highlight=contextlib#contextlib.redirect_stdout"><code>redirect_stdout</code></a> and <a href="https://docs.python.org/3/library/contextlib.html?highlight=contextlib#contextlib.redirect_stderr"><code>redirect_stderr</code></a> context manager can be used to temporarily redirect <code>stdout</code> and <code>stderr</code> streams.</p>
-
-<pre><code class="language-python">with open('output.txt', 'w') as f:
-    with redirect_stdout(f):
-        print('Hello World!')
-</code></pre>
-
-<p><code>redirect_stdout</code> only redirects stdout calls from Python, but not from C library code. See this <a href="http://eli.thegreenplace.net/2015/redirecting-all-kinds-of-stdout-in-python/">blog post by Eli Bendersky</a> on how to redirect all streams.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;output.txt&#39;</span>, <span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> f:
+    <span style="color:#66d9ef">with</span> redirect_stdout(f):
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#39;Hello World!&#39;</span>)
+</code></pre></div><p><code>redirect_stdout</code> only redirects stdout calls from Python, but not from C library code. See this <a href="http://eli.thegreenplace.net/2015/redirecting-all-kinds-of-stdout-in-python/">blog post by Eli Bendersky</a> on how to redirect all streams.</p>
 <h2 id="reading-and-writing-to-a-file-in-place">Reading and writing to a file in-place</h2>
-
 <p>See <a href="http://www.zopatista.com/python/2013/11/26/inplace-file-rewriting/">this example by Martijn Pieters</a> of a context manager that allow you to update the same file while reading it line-by-line.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> csv
 
-<pre><code class="language-python">import csv
+<span style="color:#66d9ef">with</span> inplace(csvfilename, <span style="color:#e6db74">&#39;rb&#39;</span>) <span style="color:#66d9ef">as</span> (infh, outfh):
+    reader <span style="color:#f92672">=</span> csv<span style="color:#f92672">.</span>reader(infh)
+    writer <span style="color:#f92672">=</span> csv<span style="color:#f92672">.</span>writer(outfh)
 
-with inplace(csvfilename, 'rb') as (infh, outfh):
-    reader = csv.reader(infh)
-    writer = csv.writer(outfh)
-
-    for row in reader:
-        row += ['new', 'columns']
-        writer.writerow(row)
-</code></pre>
-
-<h2 id="managing-a-pool-of-processes">Managing a pool of processes</h2>
-
+    <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> reader:
+        row <span style="color:#f92672">+=</span> [<span style="color:#e6db74">&#39;new&#39;</span>, <span style="color:#e6db74">&#39;columns&#39;</span>]
+        writer<span style="color:#f92672">.</span>writerow(row)
+</code></pre></div><h2 id="managing-a-pool-of-processes">Managing a pool of processes</h2>
 <p>Python&rsquo;s <code>multiprocessing</code> library provides a bunch of context managers to manage connections, <a href="https://docs.python.org/3/library/multiprocessing.html?highlight=multiprocessing#module-multiprocessing.pool">pools</a> and OS-level resource locks.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> multiprocessing <span style="color:#f92672">import</span> Pool
 
-<pre><code class="language-python">from multiprocessing import Pool
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(x):
+    <span style="color:#66d9ef">return</span> x<span style="color:#f92672">*</span>x
 
-def f(x):
-    return x*x
+<span style="color:#66d9ef">with</span> Pool(processes<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>) <span style="color:#66d9ef">as</span> pool:  <span style="color:#75715e"># start 4 worker processes</span>
 
-with Pool(processes=4) as pool:  # start 4 worker processes
+    <span style="color:#75715e"># evaluate &#34;f(10)&#34; asynchronously in a single process</span>
+    result <span style="color:#f92672">=</span> pool<span style="color:#f92672">.</span>apply_async(f, (<span style="color:#ae81ff">10</span>,)) 
+    <span style="color:#66d9ef">print</span>(result<span style="color:#f92672">.</span>get(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)) 
+    <span style="color:#75715e"># prints &#34;100&#34;</span>
 
-    # evaluate &quot;f(10)&quot; asynchronously in a single process
-    result = pool.apply_async(f, (10,)) 
-    print(result.get(timeout=1)) 
-    # prints &quot;100&quot;
+    <span style="color:#66d9ef">print</span>(pool<span style="color:#f92672">.</span>map(f, range(<span style="color:#ae81ff">10</span>)))       
+    <span style="color:#75715e"># prints &#34;[0, 1, 4,..., 81]&#34;</span>
 
-    print(pool.map(f, range(10)))       
-    # prints &quot;[0, 1, 4,..., 81]&quot;
-
-</code></pre>
-
-<h2 id="summary">Summary</h2>
-
+</code></pre></div><h2 id="summary">Summary</h2>
 <p>So in short, Context Managers can be used in a great variety of cases. Start using them now whenever you see the &ldquo;setup-teardown&rdquo; pattern, to write your Python code in a more Pythonic way.</p>
-
 <p>In future posts, we will explore Decorators and Metaclasses through examples of use as well.</p>
-
         </div>
 
 
         <aside>
-          <div class="section"><a href="http://arnavk.com/tags/python" class="tag">python</a> <a href="http://arnavk.com/tags/programming" class="tag">programming</a> <a href="http://arnavk.com/tags/examples" class="tag">examples</a> </div>
+          <div class="section"><a href="http://arnavk.orgtags/python" class="tag">python</a> <a href="http://arnavk.orgtags/programming" class="tag">programming</a> <a href="http://arnavk.orgtags/examples" class="tag">examples</a> </div>
 
           <div class="section share">
             
-            <a href="http://twitter.com/intent/tweet?url=http%3a%2f%2farnavk.com%2fposts%2fpython-context-managers%2f&text=Python%20in%20the%20real%20world%3a%20Context%20Managers&tw_p=tweetbutton" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-twitter"></i></a>
-            <a href="https://plus.google.com/share?url=http%3a%2f%2farnavk.com%2fposts%2fpython-context-managers%2f" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;" data-size="large"><i class="fa fa-google-plus"></i></a>
-            <a href="http://getpocket.com/edit?url=http%3a%2f%2farnavk.com%2fposts%2fpython-context-managers%2f&title=Python%20in%20the%20real%20world%3a%20Context%20Managers" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-get-pocket"></i></a>
+            <a href="http://twitter.com/intent/tweet?url=http%3a%2f%2farnavk.org%2fposts%2fpython-context-managers%2f&text=Python%20in%20the%20real%20world%3a%20Context%20Managers&tw_p=tweetbutton" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-twitter"></i></a>
+            <a href="https://plus.google.com/share?url=http%3a%2f%2farnavk.org%2fposts%2fpython-context-managers%2f" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;" data-size="large"><i class="fa fa-google-plus"></i></a>
+            <a href="http://getpocket.com/edit?url=http%3a%2f%2farnavk.org%2fposts%2fpython-context-managers%2f&title=Python%20in%20the%20real%20world%3a%20Context%20Managers" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-get-pocket"></i></a>
           </div>
 
           <div id="disqus_thread"></div>
@@ -452,7 +353,7 @@ with Pool(processes=4) as pool:  # start 4 worker processes
         return;
 
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    var disqus_shortname = 'arnavkdotcom';
+    var disqus_shortname = 'arnavkdotorg';
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 })();
@@ -479,27 +380,24 @@ with Pool(processes=4) as pool:  # start 4 worker processes
     </div>
     <div class="toc">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#context-managers-in-summary">Context Managers in summary</a></li>
-<li><a href="#reliable-destructors">Reliable destructors</a></li>
-<li><a href="#making-sure-an-open-stream-is-closed-at-the-end">Making sure an open stream is closed at the end</a></li>
-<li><a href="#making-sure-an-exception-is-raised-in-testing">Making sure an exception is raised in testing</a></li>
-<li><a href="#setting-up-mocks-before-testing">Setting up mocks before testing</a></li>
-<li><a href="#synchronising-access-to-shared-resources">Synchronising access to shared resources</a></li>
-<li><a href="#setting-up-the-python-execution-environment">Setting up the Python execution environment</a></li>
-<li><a href="#managing-database-connections-and-transactions">Managing database connections and transactions</a></li>
-<li><a href="#wrapping-remote-connections-over-a-protocol">Wrapping remote connections over a protocol:</a></li>
-<li><a href="#timing-the-execution-of-a-code-block">Timing the execution of a code block</a></li>
-<li><a href="#automating-remote-server-tasks-using-fabric">Automating remote server tasks using Fabric</a></li>
-<li><a href="#create-and-use-a-temporary-file-and-delete-at-the-end">Create and use a temporary file and delete at the end</a></li>
-<li><a href="#redirecting-input-and-output-streams">Redirecting input and output streams</a></li>
-<li><a href="#reading-and-writing-to-a-file-in-place">Reading and writing to a file in-place</a></li>
-<li><a href="#managing-a-pool-of-processes">Managing a pool of processes</a></li>
-<li><a href="#summary">Summary</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#context-managers-in-summary">Context Managers in summary</a></li>
+    <li><a href="#reliable-destructors">Reliable destructors</a></li>
+    <li><a href="#making-sure-an-open-stream-is-closed-at-the-end">Making sure an open stream is closed at the end</a></li>
+    <li><a href="#making-sure-an-exception-is-raised-in-testing">Making sure an exception is raised in testing</a></li>
+    <li><a href="#setting-up-mocks-before-testing">Setting up mocks before testing</a></li>
+    <li><a href="#synchronising-access-to-shared-resources">Synchronising access to shared resources</a></li>
+    <li><a href="#setting-up-the-python-execution-environment">Setting up the Python execution environment</a></li>
+    <li><a href="#managing-database-connections-and-transactions">Managing database connections and transactions</a></li>
+    <li><a href="#wrapping-remote-connections-over-a-protocol">Wrapping remote connections over a protocol:</a></li>
+    <li><a href="#timing-the-execution-of-a-code-block">Timing the execution of a code block</a></li>
+    <li><a href="#automating-remote-server-tasks-using-fabric">Automating remote server tasks using Fabric</a></li>
+    <li><a href="#create-and-use-a-temporary-file-and-delete-at-the-end">Create and use a temporary file and delete at the end</a></li>
+    <li><a href="#redirecting-input-and-output-streams">Redirecting input and output streams</a></li>
+    <li><a href="#reading-and-writing-to-a-file-in-place">Reading and writing to a file in-place</a></li>
+    <li><a href="#managing-a-pool-of-processes">Managing a pool of processes</a></li>
+    <li><a href="#summary">Summary</a></li>
+  </ul>
 </nav>
     </div>
   </div>
@@ -511,9 +409,25 @@ with Pool(processes=4) as pool:  # start 4 worker processes
     </div>
     <div class="list-group">
       
-      <a href="http://arnavk.com/posts/python-executable-modules/" class="list-group-item">Useful Executable Modules in the Python Standard Library</a>
+      <a href="http://arnavk.org/" class="list-group-item">Arnav Khare</a>
       
-      <a href="http://arnavk.com/posts/python-context-managers/" class="list-group-item">Python in the real world: Context Managers</a>
+      <a href="http://arnavk.org/tags/examples/" class="list-group-item">examples</a>
+      
+      <a href="http://arnavk.org/posts/" class="list-group-item">Posts</a>
+      
+      <a href="http://arnavk.org/tags/programming/" class="list-group-item">programming</a>
+      
+      <a href="http://arnavk.org/tags/python/" class="list-group-item">python</a>
+      
+      <a href="http://arnavk.org/series/python-in-the-real-world/" class="list-group-item">Python in the real world</a>
+      
+      <a href="http://arnavk.org/series/" class="list-group-item">Series</a>
+      
+      <a href="http://arnavk.org/tags/" class="list-group-item">Tags</a>
+      
+      <a href="http://arnavk.org/posts/python-executable-modules/" class="list-group-item">Useful Executable Modules in the Python Standard Library</a>
+      
+      <a href="http://arnavk.org/posts/python-context-managers/" class="list-group-item">Python in the real world: Context Managers</a>
       
     </div>
   </div>
@@ -525,7 +439,7 @@ with Pool(processes=4) as pool:  # start 4 worker processes
     </div>
     <div class="list-group">
       
-      <a href="http://arnavk.com/series/python-in-the-real-world" class="list-group-item">python-in-the-real-world</a>
+      <a href="http://arnavk.orgseries/python-in-the-real-world" class="list-group-item">python-in-the-real-world</a>
       
     </div>
   </div>
@@ -536,11 +450,11 @@ with Pool(processes=4) as pool:  # start 4 worker processes
     </div>
     <div class="list-group">
       
-      <a href="http://arnavk.com/tags/examples" class="list-group-item">examples</a>
+      <a href="http://arnavk.orgtags/examples" class="list-group-item">examples</a>
       
-      <a href="http://arnavk.com/tags/programming" class="list-group-item">programming</a>
+      <a href="http://arnavk.orgtags/programming" class="list-group-item">programming</a>
       
-      <a href="http://arnavk.com/tags/python" class="list-group-item">python</a>
+      <a href="http://arnavk.orgtags/python" class="list-group-item">python</a>
       
     </div>
   </div>
